@@ -12,6 +12,8 @@ import {
 	useColorModeValue,
 } from '@chakra-ui/react';
 
+import { Link } from 'react-router-dom';
+
 const Blob = (props: IconProps) => {
 	return (
 		<Icon
@@ -85,10 +87,19 @@ const Hero = () => {
 							colorScheme={'red'}
 							bg={'red.400'}
 							_hover={{ bg: 'red.500' }}
+							as={Link}
+							to={'/login'}
 						>
 							Login
 						</Button>
-						<Button rounded={'full'} size={'lg'} fontWeight={'normal'} px={6}>
+						<Button
+							rounded={'full'}
+							size={'lg'}
+							fontWeight={'normal'}
+							px={6}
+							as={Link}
+							to={'/register'}
+						>
 							Register
 						</Button>
 					</Stack>
