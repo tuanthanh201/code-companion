@@ -1,3 +1,4 @@
+import { useForm, SubmitHandler } from 'react-hook-form';
 import {
 	Flex,
 	Box,
@@ -9,11 +10,24 @@ import {
 	Heading,
 	useColorModeValue,
 	Text,
+	FormErrorMessage,
 } from '@chakra-ui/react';
 
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../store';
+import { LoginInput, login } from '../../store/auth/authActions';
 
 const Login = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<LoginInput>();
+	const dispatch = useAppDispatch();
+	const onSubmit: SubmitHandler<LoginInput> = (data) => {
+		dispatch(login(data));
+	};
+
 	return (
 		<Flex
 			minH={'100vh'}
@@ -32,23 +46,54 @@ const Login = () => {
 					p={8}
 				>
 					<Stack spacing={4}>
-						<FormControl id='email' isRequired>
-							<FormLabel>Email address</FormLabel>
-							<Input type='email' />
-						</FormControl>
-						<FormControl id='password'>
-							<FormLabel>Password</FormLabel>
-							<Input type='password' />
-						</FormControl>
-						<Button
-							bg={'red.400'}
-							color={'white'}
-							_hover={{
-								bg: 'red.500',
-							}}
-						>
-							Sign in
-						</Button>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<FormControl id='email' isInvalid={!!errors.email} my={4}>
+								<FormLabel htmlFor='email'>Email address</FormLabel>
+								<Input
+									type='email'
+									id='email'
+									{...register('email', {
+										required: 'This is required',
+										minLength: {
+											value: 5,
+											message: 'Minimum length should be 5',
+										},
+									})}
+								/>
+								<FormErrorMessage mb={'2'}>
+									{errors.email && errors.email.message}
+								</FormErrorMessage>
+							</FormControl>
+
+							<FormControl id='password' isInvalid={!!errors.password} my={4}>
+								<FormLabel htmlFor='password'>Password</FormLabel>
+								<Input
+									type='password'
+									id='password'
+									{...register('password', {
+										required: 'This is required',
+										minLength: {
+											value: 5,
+											message: 'Minimum length should be 5',
+										},
+									})}
+								/>
+								<FormErrorMessage mb={'2'}>
+									{errors.password && errors.password.message}
+								</FormErrorMessage>
+							</FormControl>
+							<Button
+								bg={'red.400'}
+								color={'white'}
+								_hover={{
+									bg: 'red.500',
+								}}
+								type='submit'
+								isLoading={isSubmitting}
+							>
+								Sign in
+							</Button>
+						</form>
 
 						<Link to={'/register'}>
 							<Text align={'center'}>
