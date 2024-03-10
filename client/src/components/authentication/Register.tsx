@@ -9,11 +9,28 @@ import {
 	Heading,
 	Text,
 	useColorModeValue,
+	FormErrorMessage,
 } from '@chakra-ui/react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store';
+import { RegisterInput, login } from '../../store/auth/authActions';
 
 const Register = () => {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<RegisterInput>();
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	const onSubmit: SubmitHandler<RegisterInput> = (data) => {
+		dispatch(login(data));
+		navigate('/');
+	};
+
 	return (
 		<Flex
 			minH={'100vh'}
@@ -32,25 +49,56 @@ const Register = () => {
 					p={8}
 				>
 					<Stack spacing={4}>
-						<FormControl id='email' isRequired>
-							<FormLabel>Email address</FormLabel>
-							<Input type='email' />
-						</FormControl>
-						<FormControl id='password'>
-							<FormLabel>Password</FormLabel>
-							<Input type='password' />
-						</FormControl>
-						<Button
-							// loadingText='Submitting'
-							// size='lg'
-							bg={'red.400'}
-							color={'white'}
-							_hover={{
-								bg: 'red.500',
-							}}
-						>
-							Register
-						</Button>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<FormControl id='email' isInvalid={!!errors.email} my={4}>
+								<FormLabel htmlFor='email'>Email address</FormLabel>
+								<Input
+									type='email'
+									id='email'
+									{...register('email', {
+										required: 'This is required',
+										minLength: {
+											value: 5,
+											message: 'Minimum length should be 5',
+										},
+									})}
+								/>
+								<FormErrorMessage mb={'2'}>
+									{errors.email && errors.email.message}
+								</FormErrorMessage>
+							</FormControl>
+
+							<FormControl id='password' isInvalid={!!errors.password} my={4}>
+								<FormLabel htmlFor='password'>Password</FormLabel>
+								<Input
+									type='password'
+									id='password'
+									{...register('password', {
+										required: 'This is required',
+										minLength: {
+											value: 5,
+											message: 'Minimum length should be 5',
+										},
+									})}
+								/>
+								<FormErrorMessage mb={'2'}>
+									{errors.password && errors.password.message}
+								</FormErrorMessage>
+							</FormControl>
+							<Button
+								// loadingText='Submitting'
+								// size='lg'
+								bg={'red.400'}
+								color={'white'}
+								_hover={{
+									bg: 'red.500',
+								}}
+								type='submit'
+								isLoading={isSubmitting}
+							>
+								Register
+							</Button>
+						</form>
 						<Link to={'/login'}>
 							<Text align={'center'}>
 								Already a user?{' '}

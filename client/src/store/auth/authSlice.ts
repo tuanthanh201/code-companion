@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
 	email: '',
+  isLoggedIn: false,
 };
 
 const authSlice = createSlice({
@@ -10,9 +11,11 @@ const authSlice = createSlice({
 	reducers: {
 		saveUser: (state, action: PayloadAction<string>) => {
 			state.email = action.payload;
+      state.isLoggedIn = true;
 		},
 		logout: (state) => {
 			state.email = '';
+      state.isLoggedIn = false;
 		},
 	},
 });

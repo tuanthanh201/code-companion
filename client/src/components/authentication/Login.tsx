@@ -13,7 +13,7 @@ import {
 	FormErrorMessage,
 } from '@chakra-ui/react';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store';
 import { LoginInput, login } from '../../store/auth/authActions';
 
@@ -24,8 +24,11 @@ const Login = () => {
 		formState: { errors, isSubmitting },
 	} = useForm<LoginInput>();
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
 	const onSubmit: SubmitHandler<LoginInput> = (data) => {
 		dispatch(login(data));
+		navigate('/');
 	};
 
 	return (
