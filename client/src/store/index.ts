@@ -5,10 +5,12 @@ import {
 	type TypedUseSelectorHook,
 } from 'react-redux';
 import { authReducer } from './auth/authSlice';
+import { chatReducer } from './chat/chatSlice';
 
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
+		chat: chatReducer,
 	},
 });
 
