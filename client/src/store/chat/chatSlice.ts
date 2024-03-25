@@ -1,10 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface ChatMessage {
+export interface ChatMessage {
+	id: string;
 	direction: 'incoming' | 'outgoing';
 	message: string;
 	sender: string;
-	sendTime: string;
+	sentTime: string;
 }
 
 interface ChatState {
