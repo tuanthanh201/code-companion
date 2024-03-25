@@ -9,13 +9,6 @@ import {
 	TypingIndicator,
 } from '@chatscope/chat-ui-kit-react';
 
-interface ChatMessage {
-	direction: 'incoming' | 'outgoing';
-	message: string;
-	sender: string;
-	sendTime: string;
-}
-
 const ChatContent = () => {
 	return (
 		<ChatContainer>
