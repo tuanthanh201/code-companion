@@ -5,7 +5,6 @@ export interface ChatMessage {
 	direction: 'incoming' | 'outgoing';
 	message: string;
 	sender: string;
-	sentTime: string;
 }
 
 interface ChatState {
@@ -14,27 +13,42 @@ interface ChatState {
 			messages: ChatMessage[];
 		};
 	};
+	currentUser: string;
 }
 
 const initialState: ChatState = {
-	chat: {},
+	chat: {
+		Zoe: {
+			messages: [],
+		},
+		Nia: {
+			messages: [],
+		},
+		Mei: {
+			messages: [],
+		},
+		Priya: {
+			messages: [],
+		},
+		Yuki: {
+			messages: [],
+		},
+		Sofia: {
+			messages: [],
+		},
+		Natalia: {
+			messages: [],
+		},
+	},
+	currentUser: 'Zoe',
 };
 
 const chatSlice = createSlice({
 	name: 'chat',
 	initialState,
 	reducers: {
-		pushChatMessage: (
-			state,
-			action: PayloadAction<{ user: string; message: ChatMessage }>
-		) => {
-			if (!state.chat[action.payload.user]) {
-				state.chat[action.payload.user] = {
-					messages: [action.payload.message],
-				};
-			} else {
-				state.chat[action.payload.user].messages.push(action.payload.message);
-			}
+		pushChatMessage: (state, action: PayloadAction<ChatMessage>) => {
+			state.chat[state.currentUser].messages.push(action.payload);
 		},
 		clearChatById: (state, action: PayloadAction<string>) => {
 			delete state.chat[action.payload];
@@ -42,9 +56,13 @@ const chatSlice = createSlice({
 		clearChats: (state) => {
 			state.chat = {};
 		},
+		setCurrentUser: (state, action: PayloadAction<string>) => {
+			state.currentUser = action.payload;
+		},
 	},
 });
 
-export const { clearChatById, clearChats } = chatSlice.actions;
+export const { clearChatById, clearChats, pushChatMessage, setCurrentUser } =
+	chatSlice.actions;
 
 export const chatReducer = chatSlice.reducer;
