@@ -11,6 +11,7 @@ import {
 	useColorModeValue,
 	Text,
 	FormErrorMessage,
+	Center,
 } from '@chakra-ui/react';
 
 import { Link, useNavigate } from 'react-router-dom';
@@ -85,17 +86,19 @@ const Login = () => {
 									{errors.password && errors.password.message}
 								</FormErrorMessage>
 							</FormControl>
-							<Button
-								bg={'red.400'}
-								color={'white'}
-								_hover={{
-									bg: 'red.500',
-								}}
-								type='submit'
-								isLoading={isSubmitting}
-							>
-								Sign in
-							</Button>
+							<Center>
+								<Button
+									bg={'red.400'}
+									color={'white'}
+									_hover={{
+										bg: 'red.500',
+									}}
+									type='submit'
+									isLoading={isSubmitting}
+								>
+									Sign in
+								</Button>
+							</Center>
 						</form>
 
 						<Link to={'/register'}>

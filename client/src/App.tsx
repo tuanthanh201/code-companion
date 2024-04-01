@@ -15,8 +15,8 @@ const App = () => {
 		<ChakraProvider theme={theme}>
 			<Router>
 				<Routes>
-          {/* TODO: revert this */}
-					<Route path='/' element={<Chat />} />
+					{/* TODO: revert this */}
+					<Route path='/' element={isLoggedIn ? <Chat /> : <Hero />} />
 					<Route path='/login' element={<Login />} />
 					<Route path='/register' element={<Register />} />
 				</Routes>

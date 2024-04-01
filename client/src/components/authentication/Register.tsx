@@ -10,6 +10,7 @@ import {
 	Text,
 	useColorModeValue,
 	FormErrorMessage,
+	Center,
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -85,19 +86,19 @@ const Register = () => {
 									{errors.password && errors.password.message}
 								</FormErrorMessage>
 							</FormControl>
-							<Button
-								// loadingText='Submitting'
-								// size='lg'
-								bg={'red.400'}
-								color={'white'}
-								_hover={{
-									bg: 'red.500',
-								}}
-								type='submit'
-								isLoading={isSubmitting}
-							>
-								Register
-							</Button>
+							<Center>
+								<Button
+									bg={'red.400'}
+									color={'white'}
+									_hover={{
+										bg: 'red.500',
+									}}
+									type='submit'
+									isLoading={isSubmitting}
+								>
+									Register
+								</Button>
+							</Center>
 						</form>
 						<Link to={'/login'}>
 							<Text align={'center'}>

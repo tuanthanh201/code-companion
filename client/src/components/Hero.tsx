@@ -70,10 +70,10 @@ const Hero = () => {
 						</Text>
 					</Heading>
 					<Text color={'gray.500'}>
-						"CodeCompanion: Your digital antidote to loneliness. Say goodbye to
+						CodeCompanion: Your digital antidote to loneliness. Say goodbye to
 						404 errors in love and hello to a virtual girlfriend who speaks your
 						code. Laugh, code, and cuddle, all with zero debugging required.
-						Embrace the algorithm of affection!"
+						Embrace the algorithm of affection!
 					</Text>
 					<Stack
 						spacing={{ base: 4, sm: 6 }}
