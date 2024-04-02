@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
 	Avatar,
 	Conversation,
@@ -16,6 +17,7 @@ import {
 	Button,
 	FormControl,
 	FormErrorMessage,
+	FormLabel,
 	IconButton,
 	Input,
 	Modal,
@@ -25,9 +27,9 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Select,
 	useDisclosure,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 
 const ChatSideBar = () => {
 	const { chat, currentUser } = useAppSelector((state) => state.chat);
@@ -37,6 +39,7 @@ const ChatSideBar = () => {
 	const [isError, setIsError] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 	const [newChatName, setNewChatName] = useState('');
+	const [type, setType] = useState<'GPT' | 'LLaMA'>('GPT');
 
 	function createNewUser(onClose: () => void) {
 		try {
@@ -46,8 +49,7 @@ const ChatSideBar = () => {
 				!/^[a-zA-Z]+$/.test(newChatName)
 			)
 				throw new Error('Invalid name');
-			dispatch(addNewChat(newChatName));
-			//exit the modal
+			dispatch(addNewChat({ name: newChatName, type }));
 			onClose();
 		} catch (e) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -123,6 +125,7 @@ const ChatSideBar = () => {
 								<ModalCloseButton />
 								<ModalBody>
 									<FormControl isInvalid={isError}>
+										<FormLabel htmlFor='name'>Name</FormLabel>
 										<Input
 											placeholder='Name'
 											onChange={(e) => {
@@ -140,6 +143,19 @@ const ChatSideBar = () => {
 												{errorMessage || 'Invalid name'}
 											</FormErrorMessage>
 										)}
+									</FormControl>
+
+									<FormControl>
+										<FormLabel htmlFor='type'>Type</FormLabel>
+										<Select
+											value={type}
+											onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+												setType(e.target.value as 'GPT' | 'LLaMA')
+											}
+										>
+											<option value='GPT'>GPT</option>
+											<option value='LLaMA'>LLaMA</option>
+										</Select>
 									</FormControl>
 								</ModalBody>
 								<ModalFooter>
