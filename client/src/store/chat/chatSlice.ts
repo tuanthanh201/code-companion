@@ -7,6 +7,14 @@ export interface ChatMessage {
 	sender: string;
 }
 
+export interface ChatMessageNamed {
+	id: string;
+	direction: 'incoming' | 'outgoing';
+	message: string;
+	sender: string;
+	chatName: string;
+}
+
 interface ChatState {
 	chat: {
 		[userName: string]: {
@@ -66,6 +74,14 @@ const chatSlice = createSlice({
 		pushChatMessage: (state, action: PayloadAction<ChatMessage>) => {
 			state.chat[state.currentUser].messages.push(action.payload);
 		},
+		pushChatMessageToName: (state, action: PayloadAction<ChatMessageNamed>) => {
+			if (state.chat[action.payload.chatName]) state.chat[action.payload.chatName].messages.push({
+				id: action.payload.id,
+				direction: action.payload.direction,
+				message: action.payload.message,
+				sender: action.payload.sender
+			});
+		},
 		clearChatById: (state, action: PayloadAction<string>) => {
 			//if the chat is for the current user, then set the current user to next user
 			if (state.currentUser === action.payload) {
@@ -107,6 +123,7 @@ export const {
 	clearChatById,
 	clearChats,
 	pushChatMessage,
+	pushChatMessageToName,
 	setCurrentUser,
 } = chatSlice.actions;
 

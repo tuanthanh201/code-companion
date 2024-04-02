@@ -11,11 +11,11 @@ const authSlice = createSlice({
 	reducers: {
 		saveUser: (state, action: PayloadAction<string>) => {
 			state.email = action.payload;
-      state.isLoggedIn = true;
+      		state.isLoggedIn = true;
 		},
 		logout: (state) => {
 			state.email = '';
-      state.isLoggedIn = false;
+      		state.isLoggedIn = false;
 		},
 	},
 });

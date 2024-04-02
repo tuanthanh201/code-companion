@@ -12,7 +12,7 @@ import {
 	setCurrentUser,
 	addNewChat,
 } from '../../store/chat/chatSlice';
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, Search2Icon } from '@chakra-ui/icons';
 import {
 	Button,
 	FormControl,
@@ -65,48 +65,21 @@ const ChatSideBar = () => {
 				<Avatar name='User' src='/avatars/User.svg' />
 				<ConversationHeader.Content userName='User' />
 			</ConversationHeader>
+			<Button
+				rightIcon={<Search2Icon />}
+				colorScheme={'lightgrey'}
+				variant='ghost'
+				size={'sm'}
+				transition=' 0.8s'
+				_hover={{ bg: 'lightblue' }}
+				onClick={()=>{window.open('/compare', '_self')}}
+				style={{margin: "20px 15px 0 15px", height: 55}}
+			>
+				Compare
+			</Button>
 			<ConversationList>
-				{Object.keys(chat).map((name) => {
-					const lastMessage = chat[name].messages.slice(-1)[0];
-					const lastMessageSender = lastMessage?.sender;
-					const lastMessageContent = lastMessage?.message;
-					let info = '';
-					if (lastMessageContent && lastMessageSender) {
-						const sender = lastMessageSender === 'User' ? 'You' : name;
-						info = `${sender}: ${lastMessageContent.slice(0, 15)}`;
-					}
-
-					return (
-						<Conversation
-							key={`${name}-chat`}
-							active={name === currentUser}
-							onClick={() => dispatch(setCurrentUser(name))}
-							name={name}
-							info={info}
-						>
-							<Avatar
-								name='Lilly'
-								src={chat[name].userThumbnail}
-								status='available'
-							/>
-							<Conversation.Content />
-							<Conversation.Operations visible>
-								<IconButton
-									icon={<DeleteIcon />}
-									aria-label={''}
-									variant={'ghost'}
-									size={'md'}
-									onClick={(e) => {
-										e.stopPropagation();
-										dispatch(clearChatById(name));
-									}}
-								/>
-							</Conversation.Operations>
-						</Conversation>
-					);
-				})}
 				<Conversation active={false} style={{ background: 'none' }}>
-					<Conversation.Content name={'New Conversation'}>
+					<Conversation.Content name={'New Conversation'} style={{overflow: 'visible'}}>
 						<Button
 							rightIcon={<AddIcon />}
 							colorScheme={'lightgrey'}
@@ -115,6 +88,7 @@ const ChatSideBar = () => {
 							transition=' 0.8s'
 							_hover={{ bg: 'lightblue' }}
 							onClick={onOpen}
+							style={{height: 50, marginRight: -15}}
 						>
 							New Conversation
 						</Button>
@@ -173,6 +147,45 @@ const ChatSideBar = () => {
 						</Modal>
 					</Conversation.Content>
 				</Conversation>
+				{Object.keys(chat).map((name) => {
+					const lastMessage = chat[name].messages.slice(-1)[0];
+					const lastMessageSender = lastMessage?.sender;
+					const lastMessageContent = lastMessage?.message;
+					let info = '';
+					if (lastMessageContent && lastMessageSender) {
+						const sender = lastMessageSender === 'User' ? 'You' : name;
+						info = `${sender}: ${lastMessageContent.slice(0, 15)}`;
+					}
+
+					return (
+						<Conversation
+							key={`${name}-chat`}
+							active={name === currentUser}
+							onClick={() => dispatch(setCurrentUser(name))}
+							name={name}
+							info={info}
+						>
+							<Avatar
+								name='Lilly'
+								src={chat[name].userThumbnail}
+								status='available'
+							/>
+							<Conversation.Content />
+							<Conversation.Operations visible>
+								<IconButton
+									icon={<DeleteIcon />}
+									aria-label={''}
+									variant={'ghost'}
+									size={'md'}
+									onClick={(e) => {
+										e.stopPropagation();
+										dispatch(clearChatById(name));
+									}}
+								/>
+							</Conversation.Operations>
+						</Conversation>
+					);
+				})}
 			</ConversationList>
 		</Sidebar>
 	);
