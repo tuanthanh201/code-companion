@@ -8,6 +8,9 @@ To start the website, execute the following commands in the root folder of the p
 
 `
 docker build . -t "cs492-final"
+`
+
+`
 docker run -d -p 49200:49200 cs492-final
 `
 
