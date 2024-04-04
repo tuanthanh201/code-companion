@@ -14,11 +14,13 @@ docker run -d -p 49200:49200 cs492-final
 ### Stopping the Website
 
 To stop the website, execute the following command:
+
 `
 docker ps
 `
 
 Copy the container ID of the cs492-final image. Then, use the following to stop it:
+
 `
 docker stop CONTAINER_ID
 `
