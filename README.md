@@ -5,6 +5,7 @@
 Please make sure the Docker engine is running (ie. `docker info`).
 
 To start the website, execute the following commands in the root folder of the project:
+
 `
 docker build . -t "cs492-final"
 docker run -d -p 49200:49200 cs492-final
