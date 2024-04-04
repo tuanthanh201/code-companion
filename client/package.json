@@ -18,6 +18,7 @@
     "@emotion/styled": "^11.11.0",
     "@reduxjs/toolkit": "^2.2.1",
     "framer-motion": "^11.0.6",
+    "openai": "^4.32.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
