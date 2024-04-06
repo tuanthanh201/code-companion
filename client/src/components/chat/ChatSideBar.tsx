@@ -43,6 +43,15 @@ const ChatSideBar = () => {
 					></Conversation.Content>
 				</Conversation>
 				{Object.keys(chat).map((name) => {
+					switch (name) {
+						case "Zoe":
+						case "Aria":
+						case "Ethan":
+						case "Liam":
+							break;
+						default:
+							return <></>
+					}
 					const chatName = name as ChatBotName;
 					const lastMessage = chat[chatName].messages.slice(-1)[0];
 					const lastMessageSender = lastMessage?.sender;

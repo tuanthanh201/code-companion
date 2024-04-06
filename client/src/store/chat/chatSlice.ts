@@ -100,6 +100,24 @@ const chatSlice = createSlice({
 			state.chat[chatBotName].messages = messages;
 			state.chat[chatBotName].type = type;
 		},
+		addNewChat: (
+			state,
+			action: PayloadAction<{
+				name: string;
+				puppet: ChatBotName;
+				type: ChatType;
+			}>
+		) => {
+			const { name, puppet, type } = action.payload;
+			if (state.chat[name]) {
+				throw new Error('User already exists');
+			}
+			state.chat[name] = {
+				messages: [],
+				userThumbnail: `/avatars/${puppet}.svg`,
+				type,
+			};
+		},
 	},
 });
 
@@ -108,6 +126,7 @@ export const {
 	pushChatMessageToName,
 	setCurrentUser,
 	setChatById,
+	addNewChat
 } = chatSlice.actions;
 
 export const chatReducer = chatSlice.reducer;

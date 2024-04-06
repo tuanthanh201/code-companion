@@ -27,7 +27,8 @@ import {
 	MessageList,
 	MessageSeparator,
 } from '@chatscope/chat-ui-kit-react';
-import { ChatBotName, pushChatMessageToName } from '../../store/chat/chatSlice';
+import { ChatBotName, ChatMessage, pushChatMessageToName, addNewChat } from '../../store/chat/chatSlice';
+import { sendPrompt } from '../../store/chat/chatActions';
 
 const Compare = () => {
 	const dispatch = useAppDispatch();
@@ -58,8 +59,8 @@ const Compare = () => {
 				throw new Error('Invalid name');
 
 			// TODO: clear contents (?)
-			// dispatch(addNewChat({ 'name': name_compA, 'type': type_compA }));
-			// dispatch(addNewChat({ 'name': name_compB, 'type': type_compB }));
+			dispatch(addNewChat({ 'name': name_compA, puppet: 'Zoe', 'type': type_compA }));
+			dispatch(addNewChat({ 'name': name_compB, puppet: 'Liam', 'type': type_compB }));
 			onClose();
 		} catch (e) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -184,7 +185,7 @@ const Compare = () => {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-			<CompareContent chatName={name_compA} />
+			<CompareContent chatName={name_compA as ChatBotName} />
 			<div
 				style={{
 					height: '100%',
@@ -195,7 +196,7 @@ const Compare = () => {
 					left: 'calc(50%)',
 				}}
 			/>
-			<CompareContent chatName={name_compB} />
+			<CompareContent chatName={name_compB as ChatBotName} />
 		</MainContainer>
 	);
 };
@@ -208,6 +209,32 @@ const CompareContent = (props: { chatName: ChatBotName }) => {
 		return null;
 	}
 	const { messages, type, userThumbnail } = currentChat;
+
+	const onSendHandler = (_: string, textContent: string) => {
+		const newMessage: ChatMessage = {
+			id: uuidv4(),
+			direction: 'outgoing',
+			message: textContent,
+			sender: 'User',
+		};
+		const newMessages: ChatMessage[] = [...messages, newMessage];
+		dispatch(
+			pushChatMessageToName({
+				id: uuidv4(),
+				direction: 'outgoing',
+				message: textContent,
+				sender: 'User',
+				chatBotName: props.chatName,
+			})
+		);
+		dispatch(
+			sendPrompt({
+				conversation: newMessages,
+				model: 'teknium/OpenHermes-2p5-Mistral-7B',
+				currentUser: props.chatName,
+			})
+		);
+	};
 
 	return (
 		<ChatContainer>
@@ -227,17 +254,7 @@ const CompareContent = (props: { chatName: ChatBotName }) => {
 			</MessageList>
 			<MessageInput
 				placeholder='Type message here'
-				onSend={(_, textContent) =>
-					dispatch(
-						pushChatMessageToName({
-							id: uuidv4(),
-							direction: 'outgoing',
-							message: textContent,
-							sender: 'User',
-							chatBotName: props.chatName,
-						})
-					)
-				}
+				onSend={onSendHandler}
 			/>
 		</ChatContainer>
 	);
