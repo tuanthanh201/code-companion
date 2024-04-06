@@ -1,5 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+export type ChatBotName = 'Zoe' | 'Aria' | 'Ethan' | 'Liam';
+
+export type ChatType = 'GPT' | 'LLaMA';
+
 export interface ChatMessage {
 	id: string;
 	direction: 'incoming' | 'outgoing';
@@ -7,60 +11,56 @@ export interface ChatMessage {
 	sender: string;
 }
 
-export interface ChatMessageNamed {
-	id: string;
-	direction: 'incoming' | 'outgoing';
-	message: string;
-	sender: string;
-	chatName: string;
+export interface ChatMessageNamed extends ChatMessage {
+	chatBotName: ChatBotName;
 }
 
 interface ChatState {
 	chat: {
-		[userName: string]: {
+		Zoe: {
 			messages: ChatMessage[];
-			type: 'GPT' | 'LLaMA';
+			type: ChatType;
+			userThumbnail: string;
+		};
+		Aria: {
+			messages: ChatMessage[];
+			type: ChatType;
+			userThumbnail: string;
+		};
+		Ethan: {
+			messages: ChatMessage[];
+			type: ChatType;
+			userThumbnail: string;
+		};
+		Liam: {
+			messages: ChatMessage[];
+			type: ChatType;
 			userThumbnail: string;
 		};
 	};
-	currentUser: string;
+	currentUser: ChatBotName;
 }
 
 const initialState: ChatState = {
 	chat: {
 		Zoe: {
 			messages: [],
-			userThumbnail: '/avatars/av-1.svg',
+			userThumbnail: '/avatars/Zoe.svg',
 			type: 'GPT',
 		},
-		Nia: {
+		Aria: {
 			messages: [],
-			userThumbnail: '/avatars/av-2.svg',
-			type: 'LLaMA',
-		},
-		Mei: {
-			messages: [],
-			userThumbnail: '/avatars/av-3.svg',
-			type: 'LLaMA',
-		},
-		Priya: {
-			messages: [],
-			userThumbnail: '/avatars/av-4.svg',
-			type: 'LLaMA',
-		},
-		Yuki: {
-			messages: [],
-			userThumbnail: '/avatars/av-5.svg',
+			userThumbnail: '/avatars/Aria.svg',
 			type: 'GPT',
 		},
-		Sofia: {
+		Ethan: {
 			messages: [],
-			userThumbnail: '/avatars/av-6.svg',
-			type: 'LLaMA',
+			userThumbnail: '/avatars/Ethan.svg',
+			type: 'GPT',
 		},
-		Natalia: {
+		Liam: {
 			messages: [],
-			userThumbnail: '/avatars/av-7.svg',
+			userThumbnail: '/avatars/Liam.svg',
 			type: 'GPT',
 		},
 	},
@@ -75,56 +75,39 @@ const chatSlice = createSlice({
 			state.chat[state.currentUser].messages.push(action.payload);
 		},
 		pushChatMessageToName: (state, action: PayloadAction<ChatMessageNamed>) => {
-			if (state.chat[action.payload.chatName]) state.chat[action.payload.chatName].messages.push({
-				id: action.payload.id,
-				direction: action.payload.direction,
-				message: action.payload.message,
-				sender: action.payload.sender
-			});
+			if (state.chat[action.payload.chatBotName])
+				state.chat[action.payload.chatBotName].messages.push({
+					id: action.payload.id,
+					direction: action.payload.direction,
+					message: action.payload.message,
+					sender: action.payload.sender,
+				});
 		},
-		clearChatById: (state, action: PayloadAction<string>) => {
-			//if the chat is for the current user, then set the current user to next user
-			if (state.currentUser === action.payload) {
-				const users = Object.keys(state.chat);
-				const currentUserIndex = users.indexOf(action.payload);
-				const nextUser = users[(currentUserIndex + 1) % users.length];
-				state.currentUser = nextUser;
-			}
-			delete state.chat[action.payload];
-		},
-		clearChats: (state) => {
-			state.chat = {};
-		},
-		setCurrentUser: (state, action: PayloadAction<string>) => {
+		setCurrentUser: (state, action: PayloadAction<ChatBotName>) => {
 			state.currentUser = action.payload;
 		},
-		addNewChat: (
+		// set messages and type
+		// TODO: call this in compare (?)
+		setChatById: (
 			state,
 			action: PayloadAction<{
-				name: string;
-				type: 'GPT' | 'LLaMA';
+				chatBotName: ChatBotName;
+				messages: ChatMessage[];
+				type: ChatType;
 			}>
 		) => {
-			const { name, type } = action.payload;
-			if (state.chat[name]) {
-				throw new Error('User already exists');
-			}
-			state.chat[name] = {
-				messages: [],
-				userThumbnail: `/avatars/av-${Math.floor(Math.random() * 7) + 1}.svg`,
-				type,
-			};
+			const { chatBotName, messages, type } = action.payload;
+			state.chat[chatBotName].messages = messages;
+			state.chat[chatBotName].type = type;
 		},
 	},
 });
 
 export const {
-	addNewChat,
-	clearChatById,
-	clearChats,
 	pushChatMessage,
 	pushChatMessageToName,
 	setCurrentUser,
+	setChatById,
 } = chatSlice.actions;
 
 export const chatReducer = chatSlice.reducer;

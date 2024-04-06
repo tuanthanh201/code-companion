@@ -1,10 +1,8 @@
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { pushChatMessageToName } from '../../store/chat/chatSlice';
 import { Avatar, ConversationHeader } from '@chatscope/chat-ui-kit-react';
 import { RootState, useAppDispatch, useAppSelector } from '../../store';
-import { addNewChat } from '../../store/chat/chatSlice';
 import {
 	Button,
 	FormControl,
@@ -27,9 +25,9 @@ import {
 	Message,
 	MessageInput,
 	MessageList,
-	MessageSeparator
+	MessageSeparator,
 } from '@chatscope/chat-ui-kit-react';
-
+import { ChatBotName, pushChatMessageToName } from '../../store/chat/chatSlice';
 
 const Compare = () => {
 	const dispatch = useAppDispatch();
@@ -43,9 +41,9 @@ const Compare = () => {
 	const [type_compB, setType_compB] = useState<'GPT' | 'LLaMA'>('GPT');
 
 	// Open modal on page load
-	useEffect(()=>{
+	useEffect(() => {
 		onOpen();
-	},[]);
+	}, []);
 
 	function createNewUser(onClose: () => void) {
 		try {
@@ -58,8 +56,10 @@ const Compare = () => {
 				!/^[a-zA-Z]+$/.test(name_compB)
 			)
 				throw new Error('Invalid name');
-			dispatch(addNewChat({ 'name': name_compA, 'type': type_compA }));
-			dispatch(addNewChat({ 'name': name_compB, 'type': type_compB }));
+
+			// TODO: clear contents (?)
+			// dispatch(addNewChat({ 'name': name_compA, 'type': type_compA }));
+			// dispatch(addNewChat({ 'name': name_compB, 'type': type_compB }));
 			onClose();
 		} catch (e) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -76,12 +76,12 @@ const Compare = () => {
 				height: '100vh',
 			}}
 		>
-			<Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false} >
+			<Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>Compare</ModalHeader>
 					<ModalBody>
-						{(modalPage === 0) ?
+						{modalPage === 0 ? (
 							<>
 								<FormControl isInvalid={isError}>
 									<FormLabel htmlFor='name'>Companion #1</FormLabel>
@@ -113,7 +113,7 @@ const Compare = () => {
 									</Select>
 								</FormControl>
 							</>
-							:
+						) : (
 							<>
 								<FormControl isInvalid={isError}>
 									<FormLabel htmlFor='name'>Companion #2</FormLabel>
@@ -145,32 +145,64 @@ const Compare = () => {
 									</Select>
 								</FormControl>
 							</>
-						}
+						)}
 					</ModalBody>
 					<ModalFooter>
-						{(modalPage === 0) ?
-								<Button colorScheme={'blue'} ml={3} onClick={()=>{setModalPage(1)}}>Continue</Button>
-							:
+						{modalPage === 0 ? (
+							<Button
+								colorScheme={'blue'}
+								ml={3}
+								onClick={() => {
+									setModalPage(1);
+								}}
+							>
+								Continue
+							</Button>
+						) : (
 							<>
-								<Button colorScheme={'gray'} ml={3} style={{margin: "0 auto 0 0"}} onClick={()=>{setModalPage(0)}}>Back</Button>
-								<Button colorScheme={'blue'} ml={3} onClick={()=>{createNewUser(onClose)}}>Create</Button>
+								<Button
+									colorScheme={'gray'}
+									ml={3}
+									style={{ margin: '0 auto 0 0' }}
+									onClick={() => {
+										setModalPage(0);
+									}}
+								>
+									Back
+								</Button>
+								<Button
+									colorScheme={'blue'}
+									ml={3}
+									onClick={() => {
+										createNewUser(onClose);
+									}}
+								>
+									Create
+								</Button>
 							</>
-						}
+						)}
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
 			<CompareContent chatName={name_compA} />
-			<div style={{ height: "100%", width: "6px", backgroundColor: "#c6e3fa", position: "relative", zIndex: 500, left: "calc(50%)"  }} />
+			<div
+				style={{
+					height: '100%',
+					width: '6px',
+					backgroundColor: '#c6e3fa',
+					position: 'relative',
+					zIndex: 500,
+					left: 'calc(50%)',
+				}}
+			/>
 			<CompareContent chatName={name_compB} />
 		</MainContainer>
 	);
 };
 
-const CompareContent = (props: {chatName: string}) => {
+const CompareContent = (props: { chatName: ChatBotName }) => {
 	const dispatch = useAppDispatch();
-	const { chat } = useAppSelector(
-		(state: RootState) => state.chat
-	);
+	const { chat } = useAppSelector((state: RootState) => state.chat);
 	const currentChat = chat[props.chatName];
 	if (!currentChat) {
 		return null;
@@ -202,7 +234,7 @@ const CompareContent = (props: {chatName: string}) => {
 							direction: 'outgoing',
 							message: textContent,
 							sender: 'User',
-							chatName: props.chatName
+							chatBotName: props.chatName,
 						})
 					)
 				}
