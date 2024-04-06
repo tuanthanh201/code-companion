@@ -51,12 +51,12 @@ const Login = () => {
 				>
 					<Stack spacing={4}>
 						<form onSubmit={handleSubmit(onSubmit)}>
-							<FormControl id='email' isInvalid={!!errors.email} my={4}>
-								<FormLabel htmlFor='email'>Email address</FormLabel>
+							<FormControl id='username' isInvalid={!!errors.username} my={4}>
+								<FormLabel htmlFor='username'>Username</FormLabel>
 								<Input
-									type='email'
-									id='email'
-									{...register('email', {
+									type='text'
+									id='username'
+									{...register('username', {
 										required: 'This is required',
 										minLength: {
 											value: 5,
@@ -65,7 +65,7 @@ const Login = () => {
 									})}
 								/>
 								<FormErrorMessage mb={'2'}>
-									{errors.email && errors.email.message}
+									{errors.username && errors.username.message}
 								</FormErrorMessage>
 							</FormControl>
 
