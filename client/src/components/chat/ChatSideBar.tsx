@@ -33,6 +33,7 @@ import {
 
 const ChatSideBar = () => {
 	const { chat, currentUser } = useAppSelector((state) => state.chat);
+	const { username } = useAppSelector((state) => state.auth);
 	const dispatch = useAppDispatch();
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,7 +64,7 @@ const ChatSideBar = () => {
 		<Sidebar position='left'>
 			<ConversationHeader>
 				<Avatar name='User' src='/avatars/User.svg' />
-				<ConversationHeader.Content userName='User' />
+				<ConversationHeader.Content userName={username} />
 			</ConversationHeader>
 			<Button
 				rightIcon={<Search2Icon />}
@@ -72,14 +73,19 @@ const ChatSideBar = () => {
 				size={'sm'}
 				transition=' 0.8s'
 				_hover={{ bg: 'lightblue' }}
-				onClick={()=>{window.open('/compare', '_self')}}
-				style={{margin: "20px 15px 0 15px", height: 55}}
+				onClick={() => {
+					window.open('/compare', '_self');
+				}}
+				style={{ margin: '20px 15px 0 15px', height: 55 }}
 			>
 				Compare
 			</Button>
 			<ConversationList>
 				<Conversation active={false} style={{ background: 'none' }}>
-					<Conversation.Content name={'New Conversation'} style={{overflow: 'visible'}}>
+					<Conversation.Content
+						name={'New Conversation'}
+						style={{ overflow: 'visible' }}
+					>
 						<Button
 							rightIcon={<AddIcon />}
 							colorScheme={'lightgrey'}
@@ -88,7 +94,7 @@ const ChatSideBar = () => {
 							transition=' 0.8s'
 							_hover={{ bg: 'lightblue' }}
 							onClick={onOpen}
-							style={{height: 50, marginRight: -15}}
+							style={{ height: 50, marginRight: -15 }}
 						>
 							New Conversation
 						</Button>
