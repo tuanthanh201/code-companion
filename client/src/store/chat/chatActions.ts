@@ -110,7 +110,7 @@ export const sendPrompt = (prompt: Prompt) => {
 				pushChatMessage({
 					id: uuidv4(),
 					direction: 'incoming',
-					message: response.choices[0].message.content,
+					message: response.choices[0].message.content.trim(),
 					sender: prompt.currentUser,
 				})
 			);
