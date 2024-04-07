@@ -72,7 +72,7 @@ export const sendPrompt = (prompt: Prompt) => {
 	return async (dispatch: AppDispatch) => {
 		// TODO: use prompt to determine model
 		var client;
-		if (prompt.model === 'gpt-3.5-turbo') {
+		if (prompt.model === 'gpt-4-turbo') {
 			client = new OpenAI({
 				apiKey: import.meta.env.VITE_OPENAI_KEY,
 				dangerouslyAllowBrowser: true,
@@ -110,7 +110,7 @@ export const sendPrompt = (prompt: Prompt) => {
 				pushChatMessage({
 					id: uuidv4(),
 					direction: 'incoming',
-					message: response.choices[0].message.content,
+					message: response.choices[0].message.content.trim(),
 					sender: prompt.currentUser,
 				})
 			);
