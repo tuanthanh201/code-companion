@@ -36,7 +36,8 @@ const ChatContent = () => {
 			sendPrompt({
 				conversation: newMessages,
 				model: 'teknium/OpenHermes-2p5-Mistral-7B',
-				currentUser,
+				currentUser: currentUser,
+				puppet: ''
 			})
 		);
 	};

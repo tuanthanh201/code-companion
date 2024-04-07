@@ -27,7 +27,7 @@ import {
 	MessageList,
 	MessageSeparator,
 } from '@chatscope/chat-ui-kit-react';
-import { ChatBotName, ChatMessage, pushChatMessageToName, addNewChat } from '../../store/chat/chatSlice';
+import { ChatMessage, pushChatMessageToName, addNewChat, addNewChatPuppet, setCurrentUser } from '../../store/chat/chatSlice';
 import { sendPrompt } from '../../store/chat/chatActions';
 
 const Compare = () => {
@@ -37,7 +37,7 @@ const Compare = () => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [modalPage, setModalPage] = useState<0 | 1>(0);
 	const [name_compA, setName_compA] = useState('');
-	const [type_compA, setType_compA] = useState<'GPT' | 'LLaMA'>('GPT');
+	const [puppet_compA, setPuppet_compA] = useState('Zoe');
 	const [name_compB, setName_compB] = useState('');
 	const [type_compB, setType_compB] = useState<'GPT' | 'LLaMA'>('GPT');
 
@@ -48,19 +48,11 @@ const Compare = () => {
 
 	function createNewUser(onClose: () => void) {
 		try {
-			if (
-				name_compA.length === 0 ||
-				name_compA.length > 10 ||
-				!/^[a-zA-Z]+$/.test(name_compA) ||
-				name_compB.length === 0 ||
-				name_compB.length > 10 ||
-				!/^[a-zA-Z]+$/.test(name_compB)
-			)
-				throw new Error('Invalid name');
-
-			// TODO: clear contents (?)
-			dispatch(addNewChat({ 'name': name_compA, puppet: 'Zoe', 'type': type_compA }));
-			dispatch(addNewChat({ 'name': name_compB, puppet: 'Liam', 'type': type_compB }));
+			if (name_compB.length === 0) throw new Error('Invalid name');
+			const name_a_uuid = uuidv4();
+			setName_compA(name_a_uuid);
+			dispatch(addNewChatPuppet({ 'name': name_a_uuid, 'puppet': puppet_compA, 'type': 'Puppet' }));
+			dispatch(addNewChat({ 'name': name_compB, 'type': type_compB }));
 			onClose();
 		} catch (e) {
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -84,33 +76,18 @@ const Compare = () => {
 					<ModalBody>
 						{modalPage === 0 ? (
 							<>
-								<FormControl isInvalid={isError}>
-									<FormLabel htmlFor='name'>Companion #1</FormLabel>
-									<Input
-										placeholder='Name'
-										value={name_compA}
-										onChange={(e) => {
-											setName_compA(e.target.value);
-											setIsError(false);
-										}}
-									/>
-									{isError && (
-										<FormErrorMessage>
-											{errorMessage || 'Invalid name'}
-										</FormErrorMessage>
-									)}
-								</FormControl>
-								<br />
 								<FormControl>
-									<FormLabel htmlFor='type'>Type</FormLabel>
+									<FormLabel htmlFor='type'>Virtual Partner</FormLabel>
 									<Select
-										value={type_compA}
+										value={puppet_compA}
 										onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-											setType_compA(e.target.value as 'GPT' | 'LLaMA')
+											setPuppet_compA(e.target.value)
 										}
 									>
-										<option value='GPT'>GPT</option>
-										<option value='LLaMA'>LLaMA</option>
+										<option value='Zoe'>Zoe</option>
+										<option value='Aria'>Aria</option>
+										<option value='Ethan'>Ethan</option>
+										<option value='Liam'>Liam</option>
 									</Select>
 								</FormControl>
 							</>
@@ -185,7 +162,7 @@ const Compare = () => {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-			<CompareContent chatName={name_compA as ChatBotName} />
+			<CompareContent chatName={name_compA} />
 			<div
 				style={{
 					height: '100%',
@@ -196,12 +173,12 @@ const Compare = () => {
 					left: 'calc(50%)',
 				}}
 			/>
-			<CompareContent chatName={name_compB as ChatBotName} />
+			<CompareContent chatName={name_compB} />
 		</MainContainer>
 	);
 };
 
-const CompareContent = (props: { chatName: ChatBotName }) => {
+const CompareContent = (props: { chatName: string }) => {
 	const dispatch = useAppDispatch();
 	const { chat } = useAppSelector((state: RootState) => state.chat);
 	const currentChat = chat[props.chatName];
@@ -211,6 +188,7 @@ const CompareContent = (props: { chatName: ChatBotName }) => {
 	const { messages, type, userThumbnail } = currentChat;
 
 	const onSendHandler = (_: string, textContent: string) => {
+		dispatch(setCurrentUser(props.chatName));
 		const newMessage: ChatMessage = {
 			id: uuidv4(),
 			direction: 'outgoing',
@@ -230,8 +208,9 @@ const CompareContent = (props: { chatName: ChatBotName }) => {
 		dispatch(
 			sendPrompt({
 				conversation: newMessages,
-				model: 'teknium/OpenHermes-2p5-Mistral-7B',
+				model: (currentChat.type === 'Puppet' || currentChat.type === 'Mistral') ? 'teknium/OpenHermes-2p5-Mistral-7B' : ((currentChat.type === 'LLaMA' ? 'codellama/CodeLlama-7b-Instruct-hf' : 'gpt-3.5-turbo')),
 				currentUser: props.chatName,
+				puppet: currentChat.puppet
 			})
 		);
 	};
@@ -241,7 +220,7 @@ const CompareContent = (props: { chatName: ChatBotName }) => {
 			<ConversationHeader>
 				<ConversationHeader.Back />
 				<Avatar name={props.chatName} src={userThumbnail} />
-				<ConversationHeader.Content userName={props.chatName} />
+				<ConversationHeader.Content userName={(currentChat.type === "Puppet") ? currentChat.puppet : props.chatName} />
 			</ConversationHeader>
 			<MessageList>
 				<MessageSeparator content={`Model: ${type}`} />
