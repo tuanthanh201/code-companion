@@ -6,7 +6,7 @@ import {
 	Sidebar,
 } from '@chatscope/chat-ui-kit-react';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { setCurrentUser, ChatBotName } from '../../store/chat/chatSlice';
+import { setCurrentUser } from '../../store/chat/chatSlice';
 import { Search2Icon } from '@chakra-ui/icons';
 import { Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +43,16 @@ const ChatSideBar = () => {
 					></Conversation.Content>
 				</Conversation>
 				{Object.keys(chat).map((name) => {
-					const chatName = name as ChatBotName;
+					switch (name) {
+						case "Zoe":
+						case "Aria":
+						case "Ethan":
+						case "Liam":
+							break;
+						default:
+							return <></>
+					}
+					const chatName = name;
 					const lastMessage = chat[chatName].messages.slice(-1)[0];
 					const lastMessageSender = lastMessage?.sender;
 					const lastMessageContent = lastMessage?.message;

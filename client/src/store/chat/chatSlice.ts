@@ -1,8 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-export type ChatBotName = 'Zoe' | 'Aria' | 'Ethan' | 'Liam';
-
-export type ChatType = 'GPT' | 'LLaMA';
+export type ChatType = 'GPT' | 'LLaMA' | 'Mistral' | 'Puppet';
 
 export interface ChatMessage {
 	id: string;
@@ -12,33 +10,19 @@ export interface ChatMessage {
 }
 
 export interface ChatMessageNamed extends ChatMessage {
-	chatBotName: ChatBotName;
+	chatBotName: string;
 }
 
 interface ChatState {
 	chat: {
-		Zoe: {
+		[key: string]: {
 			messages: ChatMessage[];
 			type: ChatType;
 			userThumbnail: string;
-		};
-		Aria: {
-			messages: ChatMessage[];
-			type: ChatType;
-			userThumbnail: string;
-		};
-		Ethan: {
-			messages: ChatMessage[];
-			type: ChatType;
-			userThumbnail: string;
-		};
-		Liam: {
-			messages: ChatMessage[];
-			type: ChatType;
-			userThumbnail: string;
-		};
+			puppet: string;
+		}
 	};
-	currentUser: ChatBotName;
+	currentUser: string;
 }
 
 const initialState: ChatState = {
@@ -46,22 +30,26 @@ const initialState: ChatState = {
 		Zoe: {
 			messages: [],
 			userThumbnail: '/avatars/Zoe.svg',
-			type: 'GPT',
+			type: 'Mistral',
+			puppet: ''
 		},
 		Aria: {
 			messages: [],
 			userThumbnail: '/avatars/Aria.svg',
-			type: 'GPT',
+			type: 'Mistral',
+			puppet: ''
 		},
 		Ethan: {
 			messages: [],
 			userThumbnail: '/avatars/Ethan.svg',
-			type: 'GPT',
+			type: 'Mistral',
+			puppet: ''
 		},
 		Liam: {
 			messages: [],
 			userThumbnail: '/avatars/Liam.svg',
-			type: 'GPT',
+			type: 'Mistral',
+			puppet: ''
 		},
 	},
 	currentUser: 'Zoe',
@@ -83,7 +71,7 @@ const chatSlice = createSlice({
 					sender: action.payload.sender,
 				});
 		},
-		setCurrentUser: (state, action: PayloadAction<ChatBotName>) => {
+		setCurrentUser: (state, action: PayloadAction<string>) => {
 			state.currentUser = action.payload;
 		},
 		// set messages and type
@@ -91,7 +79,7 @@ const chatSlice = createSlice({
 		setChatById: (
 			state,
 			action: PayloadAction<{
-				chatBotName: ChatBotName;
+				chatBotName: string;
 				messages: ChatMessage[];
 				type: ChatType;
 			}>
@@ -99,6 +87,43 @@ const chatSlice = createSlice({
 			const { chatBotName, messages, type } = action.payload;
 			state.chat[chatBotName].messages = messages;
 			state.chat[chatBotName].type = type;
+		},
+		addNewChat: (
+			state,
+			action: PayloadAction<{
+				name: string;
+				type: ChatType;
+			}>
+		) => {
+			const { name, type } = action.payload;
+			if (state.chat[name]) {
+				throw new Error('User already exists');
+			}
+			state.chat[name] = {
+				messages: [],
+				userThumbnail: `/avatars/av-3.svg`,
+				type: type,
+				puppet: ''
+			};
+		},
+		addNewChatPuppet: (
+			state,
+			action: PayloadAction<{
+				name: string;
+				puppet: string;
+				type: ChatType;
+			}>
+		) => {
+			const { name, puppet, type } = action.payload;
+			if (state.chat[name]) {
+				throw new Error('User already exists');
+			}
+			state.chat[name] = {
+				messages: [],
+				userThumbnail: `/avatars/${puppet}.svg`,
+				type: type,
+				puppet: puppet
+			};
 		},
 	},
 });
@@ -108,6 +133,8 @@ export const {
 	pushChatMessageToName,
 	setCurrentUser,
 	setChatById,
+	addNewChat,
+	addNewChatPuppet
 } = chatSlice.actions;
 
 export const chatReducer = chatSlice.reducer;

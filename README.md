@@ -4,7 +4,7 @@
 
 Please make sure the Docker engine is running (ie. `docker info`).
 
-To start the website, execute the following commands in the root folder of the project:
+To start the website, execute the following commands in the 'client' directory of the project:
 
 `
 docker build . -t "cs492-final"
@@ -13,6 +13,10 @@ docker build . -t "cs492-final"
 `
 docker run -d -p 49200:49200 cs492-final
 `
+
+### Accessing the Website
+
+You can open the website at http://localhost:49200.
 
 ### Stopping the Website
 

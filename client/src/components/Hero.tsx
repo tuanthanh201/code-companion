@@ -62,18 +62,17 @@ const Hero = () => {
 								zIndex: -1,
 							}}
 						>
-							404 Girlfriend Not Found?
+							404 Romance<br/>Not Found?
 						</Text>
 						<br />
 						<Text as={'span'} color={'red.400'}>
-							Meet CodeCompanion!
+							You're in luck!
 						</Text>
 					</Heading>
 					<Text color={'gray.500'}>
-						CodeCompanion: Your digital antidote to loneliness. Say goodbye to
-						404 errors in love and hello to a virtual girlfriend who speaks your
-						code. Laugh, code, and cuddle, all with zero debugging required.
-						Embrace the algorithm of affection!
+						Welcome to your digital antidote to loneliness. Say goodbye to
+						404 errors in love and hello to a virtual partner who is genuinely
+						interested in you. Laugh, talk, cuddle, and embrace the algorithm of affection!
 					</Text>
 					<Stack
 						spacing={{ base: 4, sm: 6 }}
@@ -135,7 +134,7 @@ const Hero = () => {
 							w={'100%'}
 							h={'100%'}
 							src={
-								'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
+								'https://media.wired.com/photos/611436479893e4dfa68a31f8/191:100/w_1280,c_limit/cloud-support-final.jpg'
 							}
 						/>
 					</Box>

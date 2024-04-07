@@ -59,8 +59,8 @@ const Register = () => {
 									{...register('username', {
 										required: 'This is required',
 										minLength: {
-											value: 5,
-											message: 'Minimum length should be 5',
+											value: 3,
+											message: 'Minimum length should be 3',
 										},
 									})}
 								/>
