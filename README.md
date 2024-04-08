@@ -1,4 +1,4 @@
-# virtual-girlfriends
+# CodeCompanion
 
 ### Launching the Website
 
