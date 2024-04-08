@@ -1,4 +1,4 @@
-# VirtualPartners
+# CodeCompanion
 
 ### Launching the Website
 
