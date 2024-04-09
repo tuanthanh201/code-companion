@@ -72,7 +72,7 @@ export const sendPrompt = (prompt: Prompt) => {
 	return async (dispatch: AppDispatch) => {
 		// TODO: use prompt to determine model
 		var client;
-		if (prompt.model === 'gpt-4-turbo') {
+		if (prompt.model === 'gpt-4-turbo-preview') {
 			client = new OpenAI({
 				apiKey: import.meta.env.VITE_OPENAI_KEY,
 				dangerouslyAllowBrowser: true,
