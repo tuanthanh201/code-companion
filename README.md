@@ -1,5 +1,9 @@
 # CodeCompanion
 
+### Setup
+
+Please add the .env file in our submission into the 'client' directory of the project!
+
 ### Launching the Website
 
 Please make sure the Docker engine is running (ie. `docker info`).
