@@ -208,7 +208,7 @@ const CompareContent = (props: { chatName: string }) => {
 		dispatch(
 			sendPrompt({
 				conversation: newMessages,
-				model: (currentChat.type === 'Puppet' || currentChat.type === 'Mistral') ? 'teknium/OpenHermes-2p5-Mistral-7B' : ((currentChat.type === 'LLaMA' ? 'codellama/CodeLlama-7b-Instruct-hf' : 'gpt-4-turbo')),
+				model: (currentChat.type === 'Puppet' || currentChat.type === 'Mistral') ? 'teknium/OpenHermes-2p5-Mistral-7B' : ((currentChat.type === 'LLaMA' ? 'codellama/CodeLlama-7b-Instruct-hf' : 'gpt-4-turbo-preview')),
 				currentUser: props.chatName,
 				puppet: currentChat.puppet
 			})
